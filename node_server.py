@@ -20,7 +20,6 @@ class Block:
 		block_string = json.dumps(self.__dict__, sort_keys=True)
 		return sha256(block_string.encode()).hexdigest()
 
-
 class Blockchain:
 	difficulty = 2
 
@@ -269,7 +268,6 @@ def verify_and_add_block():
 @app.route('/pending_tx')
 def get_pending_tx():
 	return json.dumps(blockchain.unconfirmed_data)
-
 
 def consensus() -> bool:
 	"""

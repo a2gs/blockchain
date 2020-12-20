@@ -13,7 +13,7 @@ class Block:
 		self.previous_hash = previous_hash
 		self.nonce         = nonce
 
-	def compute_hash(self):
+	def compute_hash(self)->str:
 		"""
 		A function that return the hash of the block contents.
 		"""
@@ -28,7 +28,7 @@ class Blockchain:
 		self.unconfirmed_data = []
 		self.chain = []
 
-	def create_genesis_block(self):
+	def create_genesis_block(self) -> None:
 		"""
 		A function to generate genesis block and appends it to
 		the chain. The block has index 0, previous_hash as 0, and
@@ -39,10 +39,10 @@ class Blockchain:
 		self.chain.append(genesis_block)
 
 	@property
-	def last_block(self):
+	def last_block(self) -> Block:
 		return self.chain[-1]
 
-	def add_block(self, block, proof):
+	def add_block(self, block, proof) -> bool:
 		"""
 		A function that adds the block to the chain after verification.
 		Verification includes:
@@ -63,7 +63,7 @@ class Blockchain:
 		return True
 
 	@staticmethod
-	def proof_of_work(block):
+	def proof_of_work(block) -> str:
 		"""
 		Function that tries different values of nonce to get a hash
 		that satisfies our difficulty criteria.
@@ -77,11 +77,11 @@ class Blockchain:
 
 		return computed_hash
 
-	def add_new_data(self, data):
+	def add_new_data(self, data) -> None:
 		self.unconfirmed_data.append(data)
 
 	@classmethod
-	def is_valid_proof(cls, block, block_hash):
+	def is_valid_proof(cls, block, block_hash) -> bool:
 		"""
 		Check if block_hash is valid hash of block and satisfies
 		the difficulty criteria.
@@ -89,7 +89,7 @@ class Blockchain:
 		return (block_hash.startswith('0' * Blockchain.difficulty) and block_hash == block.compute_hash())
 
 	@classmethod
-	def check_chain_validity(cls, chain):
+	def check_chain_validity(cls, chain) -> bool:
 		result = True
 		previous_hash = "0"
 		
@@ -105,9 +105,9 @@ class Blockchain:
 
 			block.hash, previous_hash = block_hash, block_hash
 
-			return result
+		return result
 
-	def mine(self):
+	def mine(self) -> bool:
 		"""
 		This function serves as an interface to add the pending
 		data to the blockchain by adding them to the block
@@ -234,7 +234,7 @@ def register_with_existing_node():
 		# if something goes wrong, pass it on to the API response
 		return response.content, response.status_code
 
-def create_chain_from_dump(chain_dump):
+def create_chain_from_dump(chain_dump) -> Block:
 	generated_blockchain = Blockchain()
 	generated_blockchain.create_genesis_block()
 
@@ -271,7 +271,7 @@ def get_pending_tx():
 	return json.dumps(blockchain.unconfirmed_data)
 
 
-def consensus():
+def consensus() -> bool:
 	"""
 	Our naive consnsus algorithm. If a longer valid chain is
 	found, our chain is replaced with it.
@@ -296,7 +296,7 @@ def consensus():
 	
 	return False
 
-def announce_new_block(block):
+def announce_new_block(block) -> None:
 	"""
 	A function to announce to the network once a block has been mined.
 	Other blocks can simply verify the proof of work and add it to their
